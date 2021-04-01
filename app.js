@@ -1,72 +1,40 @@
-let users = []
-let todoArray = []
-const userSelect = document.getElementById('userSelect');
-const todoList = document.getElementById('todoList');
-const searchTodo = document.getElementById('search');
+fetch('https://jsonplaceholder.typicode.com/users/')
+  .then(response => response.json())
+ .then(item => {
+      const element= document.querySelector(".dropdown-menu")
+    //   const myLi = document.createElement("li");
+    //   element.appendChild(myLi);
+      for(let index = 0; index < item.length; index++) {
+          const myLi = document.createElement("li");
+           element.appendChild(myLi);
+        const myA = document.createElement("a");
+        myLi.appendChild(myA);
+        myA.innerHTML = item[index].name;
+        myA.className = "dropdown-item";
+        
+             }
+           
+          // console.log(item[index]);
+             
+     })
+  
+      fetch('https://jsonplaceholder.typicode.com/todos/1')
+         .then(response => response.json())
+         .then(item => {
+
+       document.querySelector(".toDO");
+       const myUl = document.createElement("ul");
 
 
-function userChange() {
-    fillTodos(userSelect.value, searchTodo.innerText)
-}
-function searchChange(val) {
-    fillTodos(userSelect.value, val)
-}
-
-function getUsers() {
-    return new Promise((resolve, reject) => {
-        resolve(
-            fetch('https://jsonplaceholder.typicode.com/users')
-                .then(response => response.json())
-                .then(json => users = json));
+     for(let index = 0; index < item.length; index++) {
+      const myLi = document.createElement("li");
+          myUl.appendChild(myLi);
+      const myA = document.createElement("a");
+       myLi.appendChild(myA);
+       myA.innerText = item[index].userId + "/" + item[index].id + "/" + item[index].title;
+     
+      
+            }
+         
+            //console.log(item[index]);
     })
-}
-
-const fillUsers = () => {
-    users.map(user => {
-        const newOption = document.createElement('option');
-        newOption.value = user.id;
-        newOption.innerText = user.name;
-        userSelect.appendChild(newOption)
-    })
-}
-
-function getTodos() {
-    return new Promise((resolve, reject) => {
-        resolve(
-            fetch('https://jsonplaceholder.typicode.com/todos')
-                .then(response => response.json())
-                .then(json => todoArray = json));
-    })
-}
-
-
-
-const fillTodos = (userId, filter) => {
-    todoList.innerHTML = ''
-    const newTr = document.createElement('tr');
-    const th1 = document.createElement('th');
-    const th2 = document.createElement('th');
-    th1.innerText = "User ID";
-    th2.innerText = "Todo Title";
-    newTr.appendChild(th1);
-    newTr.appendChild(th2);
-    todoList.appendChild(newTr)
-    todoArray.map(todo => {
-        if (((userId && todo.userId == userId) || !userId) && ((filter && todo.title.includes(filter)) || !filter)) {
-            const newTr = document.createElement('tr');
-            const td1 = document.createElement('td');
-            const td2 = document.createElement('td');
-            td1.innerText = users.find(u => u.id == todo.userId).name;
-            td2.innerText = todo.title;
-            newTr.appendChild(td1)
-            newTr.appendChild(td2)
-            todoList.appendChild(newTr)
-        }
-    })
-}
-
-getUsers()
-    .then(() => fillUsers())
-
-getTodos()
-    .then(() => fillTodos())
